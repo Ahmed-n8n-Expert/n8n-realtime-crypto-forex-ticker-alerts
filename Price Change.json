@@ -1,0 +1,189 @@
+{
+  "name": "Price Change",
+  "nodes": [
+    {
+      "parameters": {
+        "url": "https://open.er-api.com/v6/latest/USD",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        208,
+        0
+      ],
+      "id": "4a39eb0d-d5b1-44b0-a036-fe0e6fc00c7a",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "89c04342-8e7d-4983-9b5f-0d506bccc1c3",
+              "name": "AED_Price",
+              "value": "3.6725",
+              "type": "string"
+            },
+            {
+              "id": "4f976a87-3042-456a-98b4-b91d4f2318bc",
+              "name": "EGP_Price",
+              "value": "46.839193",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        416,
+        0
+      ],
+      "id": "061af345-6fc8-463d-9d84-4a98ddec23b4",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1o-irK9RuOYyOPJZQkq-_bMTO9DLI6vZy8RrE9NSh_rY",
+          "mode": "list",
+          "cachedResultName": "money",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1o-irK9RuOYyOPJZQkq-_bMTO9DLI6vZy8RrE9NSh_rY/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1o-irK9RuOYyOPJZQkq-_bMTO9DLI6vZy8RrE9NSh_rY/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "time": "={{ $('HTTP Request').item.json.time_last_update_utc }}",
+            "AED_Price": "={{ $json.AED_Price }}",
+            "EGP_Price": "={{ $json.EGP_Price }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "time",
+              "displayName": "time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "AED_Price",
+              "displayName": "AED_Price",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "EGP_Price",
+              "displayName": "EGP_Price",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        624,
+        0
+      ],
+      "id": "cb4a9246-029c-4956-bbb7-23ca91b28042",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "vya7xbUqRt1kjjnb",
+          "name": "Google Sheets account 4"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 9
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -64,
+        0
+      ],
+      "id": "2fe2c54c-5b16-4a1d-a902-4c741d0be1d2",
+      "name": "Schedule Trigger"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "5cce871c-6144-4a7a-8839-ed3d0f02dce4",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "9aa2603dda94482e4b81f20d27acd5b407e83ff0532377f7ddea8d1bbabeeeee"
+  },
+  "id": "U8pWoCqxedCrTA2-btOlY",
+  "tags": []
+}
